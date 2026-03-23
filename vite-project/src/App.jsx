@@ -14,12 +14,12 @@ function App() {
       const parsedHeaders = headers ? JSON.parse(headers) : {};
       const parsedBody = body ? JSON.parse(body) : {};
 
-      const res = await axios({
-        url,
-        method,
-        headers: parsedHeaders,
-        data: method !== "GET" ? parsedBody : undefined
-      });
+const res = await axios.post("http://localhost:8080/proxy", {
+  url,
+  method,
+  headers: parsedHeaders,
+  body: parsedBody
+});
 
       setResponse(JSON.stringify(res.data, null, 2));
     } catch (err) {
