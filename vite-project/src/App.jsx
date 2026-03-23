@@ -7,6 +7,7 @@ function App() {
   const [headers, setHeaders] = useState("");
   const [body, setBody] = useState("");
   const [response, setResponse] = useState("");
+  const [activeTab, setActiveTab] = useState("headers");
 
   const sendRequest = async () => {
     try {
@@ -63,23 +64,32 @@ function App() {
         />
       </div>
 
-      <textarea
-        style={{ width: "600px", height: "80px", padding: "8px" }}
-        placeholder='Headers (JSON) e.g. {"Content-Type":"application/json"}'
-        value={headers}
-        onChange={(e) => setHeaders(e.target.value)}
-      />
+      <div style={{ marginTop: "20px" }}>
+  <button onClick={() => setActiveTab("headers")} style={{ marginRight: "10px" }}>
+    Headers
+  </button>
+  <button onClick={() => setActiveTab("body")}>
+    Body
+  </button>
+</div>
 
-      <br /><br />
+{activeTab === "headers" && (
+  <textarea
+    style={{ width: "600px", height: "80px", padding: "8px", marginTop: "10px" }}
+    placeholder='Headers (JSON)'
+    value={headers}
+    onChange={(e) => setHeaders(e.target.value)}
+  />
+)}
 
-      <textarea
-        style={{ width: "600px", height: "120px", padding: "8px" }}
-        placeholder='Body (JSON)'
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-      />
-
-      <br /><br />
+{activeTab === "body" && (
+  <textarea
+    style={{ width: "600px", height: "120px", padding: "8px", marginTop: "10px" }}
+    placeholder='Body (JSON)'
+    value={body}
+    onChange={(e) => setBody(e.target.value)}
+  />
+)}
 
       <button
         onClick={sendRequest}
