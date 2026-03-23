@@ -14,7 +14,7 @@ function App() {
       const parsedHeaders = headers ? JSON.parse(headers) : {};
       const parsedBody = body ? JSON.parse(body) : {};
 
-const res = await axios.post("http://localhost:8080/proxy", {
+const res = await axios.post("https://reqforge-backend.onrender.com/proxy", {
   url,
   method,
   headers: parsedHeaders,
