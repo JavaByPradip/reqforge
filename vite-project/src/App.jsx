@@ -42,7 +42,7 @@ const res = await axios.post("https://reqforge-backend.onrender.com/proxy", {
       }}
     >
       <h1 style={{ color: "#38bdf8" }}>🔥 ReqForge</h1>
-      <p>Forge Your API Requests</p>
+  
 
       <div style={{ marginBottom: "10px" }}>
         <select
