@@ -17,56 +17,95 @@ function App() {
         url,
         method,
         headers: parsedHeaders,
-        data: parsedBody
+        data: method !== "GET" ? parsedBody : undefined
       });
 
       setResponse(JSON.stringify(res.data, null, 2));
     } catch (err) {
-      setResponse(err.toString());
+      if (err.response) {
+        setResponse(JSON.stringify(err.response.data, null, 2));
+      } else {
+        setResponse(err.message);
+      }
     }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>🔥 ReqForge</h1>
+    <div
+      style={{
+        padding: "20px",
+        backgroundColor: "#0f172a",
+        color: "#e2e8f0",
+        minHeight: "100vh",
+        fontFamily: "Arial"
+      }}
+    >
+      <h1 style={{ color: "#38bdf8" }}>🔥 ReqForge</h1>
+      <p>Forge Your API Requests</p>
 
-      <select onChange={(e) => setMethod(e.target.value)}>
-        <option>GET</option>
-        <option>POST</option>
-        <option>PUT</option>
-        <option>DELETE</option>
-      </select>
+      <div style={{ marginBottom: "10px" }}>
+        <select
+          value={method}
+          onChange={(e) => setMethod(e.target.value)}
+          style={{ padding: "8px", marginRight: "10px" }}
+        >
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>DELETE</option>
+        </select>
 
-      <br /><br />
-
-      <input
-        style={{ width: "500px" }}
-        placeholder="Enter API URL"
-        onChange={(e) => setUrl(e.target.value)}
-      />
-
-      <br /><br />
+        <input
+          style={{ width: "400px", padding: "8px" }}
+          placeholder="Enter API URL"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+      </div>
 
       <textarea
-        style={{ width: "500px", height: "80px" }}
-        placeholder='Headers (JSON format)'
+        style={{ width: "600px", height: "80px", padding: "8px" }}
+        placeholder='Headers (JSON) e.g. {"Content-Type":"application/json"}'
+        value={headers}
         onChange={(e) => setHeaders(e.target.value)}
       />
 
       <br /><br />
 
       <textarea
-        style={{ width: "500px", height: "100px" }}
-        placeholder='Body (JSON format)'
+        style={{ width: "600px", height: "120px", padding: "8px" }}
+        placeholder='Body (JSON)'
+        value={body}
         onChange={(e) => setBody(e.target.value)}
       />
 
       <br /><br />
 
-      <button onClick={sendRequest}>Send Request</button>
+      <button
+        onClick={sendRequest}
+        style={{
+          padding: "10px 20px",
+          backgroundColor: "#38bdf8",
+          border: "none",
+          cursor: "pointer",
+          fontWeight: "bold"
+        }}
+      >
+        Send Request
+      </button>
 
-      <h3>Response:</h3>
-      <pre>{response}</pre>
+      <h3 style={{ marginTop: "20px" }}>Response:</h3>
+
+      <pre
+        style={{
+          backgroundColor: "#1e293b",
+          padding: "10px",
+          overflowX: "auto",
+          maxHeight: "400px"
+        }}
+      >
+        {response}
+      </pre>
     </div>
   );
 }
