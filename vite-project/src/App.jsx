@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useEffect } from "react";
 
 function App() {
   const [url, setUrl] = useState("");
@@ -8,6 +9,7 @@ function App() {
   const [body, setBody] = useState("");
   const [response, setResponse] = useState("");
   const [activeTab, setActiveTab] = useState("headers");
+  const [history, setHistory] = useState([]);
 
   const sendRequest = async () => {
     try {
@@ -31,9 +33,80 @@ const res = await axios.post("https://reqforge-backend.onrender.com/proxy", {
     }
   };
 
-  return (
+  useEffect(() => {
+  fetchHistory();
+}, []);
+
+const fetchHistory = async () => {
+  try {
+    const res = await axios.get("https://reqforge-backend.onrender.com/proxy/history");
+    setHistory(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+
+const loadHistory = (item) => {
+  setUrl(item.url);
+  setMethod(item.method);
+  setHeaders(item.headers || "");
+  setBody(item.body || "");
+  setResponse(item.response || "");
+};
+
+
+return (
+  <div style={{ display: "flex" }}>
+
+    {/* 🔥 Sidebar */}
+    <div style={{
+      width: "250px",
+      background: "#020617",
+      padding: "10px",
+      borderRight: "1px solid #334155",
+      height: "100vh",
+      overflowY: "auto"
+    }}>
+      <h3 style={{ color: "#38bdf8" }}>History</h3>
+
+      {history.map((item, index) => (
+        <div
+          key={index}
+          onClick={() => loadHistory(item)}
+          style={{
+            padding: "8px",
+            marginBottom: "5px",
+            cursor: "pointer",
+            background: "#1e293b",
+            borderRadius: "5px"
+          }}
+        >
+          <div style={{ fontWeight: "bold" }}>
+            {item.method}
+          </div>
+
+          <div style={{
+            fontSize: "12px",
+            color: "#94a3b8"
+          }}>
+            {item.url.substring(0, 25)}...
+          </div>
+
+          <div style={{
+            color: item.status === 200 ? "lightgreen" : "red",
+            fontSize: "12px"
+          }}>
+            {item.status}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* 🔥 Main Content */}
     <div
       style={{
+        flex: 1,
         padding: "20px",
         backgroundColor: "#0f172a",
         color: "#e2e8f0",
@@ -42,7 +115,6 @@ const res = await axios.post("https://reqforge-backend.onrender.com/proxy", {
       }}
     >
       <h1 style={{ color: "#38bdf8" }}>🔥 ReqForge</h1>
-  
 
       <div style={{ marginBottom: "10px" }}>
         <select
@@ -65,31 +137,31 @@ const res = await axios.post("https://reqforge-backend.onrender.com/proxy", {
       </div>
 
       <div style={{ marginTop: "20px" }}>
-  <button onClick={() => setActiveTab("headers")} style={{ marginRight: "10px" }}>
-    Headers
-  </button>
-  <button onClick={() => setActiveTab("body")}>
-    Body
-  </button>
-</div>
+        <button onClick={() => setActiveTab("headers")} style={{ marginRight: "10px" }}>
+          Headers
+        </button>
+        <button onClick={() => setActiveTab("body")}>
+          Body
+        </button>
+      </div>
 
-{activeTab === "headers" && (
-  <textarea
-    style={{ width: "600px", height: "80px", padding: "8px", marginTop: "10px" }}
-    placeholder='Headers (JSON)'
-    value={headers}
-    onChange={(e) => setHeaders(e.target.value)}
-  />
-)}
+      {activeTab === "headers" && (
+        <textarea
+          style={{ width: "600px", height: "80px", padding: "8px", marginTop: "10px" }}
+          placeholder='Headers (JSON)'
+          value={headers}
+          onChange={(e) => setHeaders(e.target.value)}
+        />
+      )}
 
-{activeTab === "body" && (
-  <textarea
-    style={{ width: "600px", height: "120px", padding: "8px", marginTop: "10px" }}
-    placeholder='Body (JSON)'
-    value={body}
-    onChange={(e) => setBody(e.target.value)}
-  />
-)}
+      {activeTab === "body" && (
+        <textarea
+          style={{ width: "600px", height: "120px", padding: "8px", marginTop: "10px" }}
+          placeholder='Body (JSON)'
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        />
+      )}
 
       <button
         onClick={sendRequest}
@@ -98,7 +170,8 @@ const res = await axios.post("https://reqforge-backend.onrender.com/proxy", {
           backgroundColor: "#38bdf8",
           border: "none",
           cursor: "pointer",
-          fontWeight: "bold"
+          fontWeight: "bold",
+          marginTop: "10px"
         }}
       >
         Send Request
@@ -117,7 +190,8 @@ const res = await axios.post("https://reqforge-backend.onrender.com/proxy", {
         {response}
       </pre>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;
