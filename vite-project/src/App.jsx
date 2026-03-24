@@ -50,33 +50,9 @@ const fetchHistory = async () => {
 const loadHistory = (item) => {
   setUrl(item.url);
   setMethod(item.method);
-  setActiveTab(item.body ? "body" : "headers");
-  try {
-  const parsedHeaders = JSON.parse(item.headers);
-  setHeaders(JSON.stringify(parsedHeaders, null, 2));
-} catch {
   setHeaders(item.headers || "");
-}
-  try {
-  const parsedBody = JSON.parse(item.body);
-  setBody(JSON.stringify(parsedBody, null, 2));
-} catch {
   setBody(item.body || "");
-}
-  try {
-  const parsed = JSON.parse(item.response);
-  setResponse(JSON.stringify(parsed, null, 2));
-} catch {
   setResponse(item.response || "");
-}
-};
-
-const clearForm = () => {
-  setUrl("");
-  setMethod("GET");
-  setHeaders("");
-  setBody("");
-  setResponse("");
 };
 
 
@@ -200,19 +176,6 @@ return (
       >
         Send Request
       </button>
-      <button
-  onClick={clearForm}
-  style={{
-    padding: "10px 20px",
-    backgroundColor: "#ef4444",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: "bold",
-    marginLeft: "10px"
-  }}
->
-  New Request
-</button>
 
       <h3 style={{ marginTop: "20px" }}>Response:</h3>
 
